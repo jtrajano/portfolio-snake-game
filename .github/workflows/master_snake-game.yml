@@ -29,6 +29,11 @@ jobs:
           npm run build --if-present
           npm run test --if-present
 
+      - name: Copy server.js and package files to dist
+        run: |
+          cp server.js dist/
+          cp package*.json dist/
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
@@ -47,6 +52,9 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: node-app
+
+      - name: Install production dependencies
+        run: npm install --production
       
       - name: Login to Azure
         uses: azure/login@v2
