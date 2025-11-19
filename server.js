@@ -7,7 +7,15 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-app.use(express.static(__dirname));
+app.use(express.static(__dirname, {
+  maxAge: '1y',
+  etag: true,
+  setHeaders: (res, filepath) => {
+    if (filepath.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'no-cache');
+    }
+  }
+}));
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
